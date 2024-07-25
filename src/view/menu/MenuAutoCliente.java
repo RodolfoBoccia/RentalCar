@@ -1,13 +1,10 @@
 package view.menu;
 
-import controller.Controller;
-import model.Auto;
-import model.AutoBuilder;
-
+import controller.ClienteController;
 
 public class MenuAutoCliente extends Menu {
-    public MenuAutoCliente(Controller controller) {
-        super(controller);
+    public MenuAutoCliente(ClienteController clienteController) {
+        super(clienteController);
     }
     public void display() {
 
@@ -22,7 +19,7 @@ public class MenuAutoCliente extends Menu {
 
             switch (input) {
                 case "1":
-                   // controller.mostraAuto(); TODO da definire
+                    clienteController.mostraAuto(); //TODO controllare
                     continue;
                 case "x":
                     termina = true;

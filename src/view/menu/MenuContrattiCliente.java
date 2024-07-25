@@ -1,6 +1,6 @@
 package view.menu;
 
-import controller.Controller;
+import controller.ClienteController;
 import model.Contratto;
 import model.ContrattoBuilder;
 import model.Auto;
@@ -12,8 +12,8 @@ import java.time.temporal.ChronoUnit;
 
 public class MenuContrattiCliente extends Menu {
 
-    public MenuContrattiCliente(Controller controller) {
-        super(controller);
+    public MenuContrattiCliente(ClienteController clienteController) {
+        super(clienteController);
     }
 
     public void display() {
@@ -30,10 +30,10 @@ public class MenuContrattiCliente extends Menu {
 
             switch (input) {
                 case "1":
-                    displayAggiungiContratto();
+                    clienteController.aggiungiContratto(displayAggiungiContratto());
                     continue;
                 case "2":
-                    //controller.mostraContratti(); TODO da definire
+                    clienteController.mostraContrattiUtente(); //TODO controllare
                     continue;
                 case "x":
                     termina = true;
@@ -44,46 +44,31 @@ public class MenuContrattiCliente extends Menu {
         }
     }
 
-    public void displayAggiungiContratto() { //TODO si puo fare contratto con cliente gia esistente
-        System.out.println("Per creare un contratto è necessario creare prima il cliente a cui è associato.");
-        MenuClienti menuClienti = new MenuClienti(this.controller);
-        menuClienti.displayAggiungiCliente();
-    }
-
-    public Contratto displayAggiungiContratto(Cliente cliente) {
+    public Contratto displayAggiungiContratto() {
         boolean termina = false;
-        String cfCliente = cliente.getCf();
+        String cfCliente = clienteController.getCliente().getCf();
         String confermaInput;
         System.out.println("Inserisci i dati del contratto");
 
         while (!termina) {
-            //controller.mostraAuto(); TODO da definire
+            clienteController.mostraAuto();
             System.out.print("ID dell'auto come indicato nella tabella: ");
             String idAuto = scanner.next();
 
-            if (true) {  //TODO !controller.isAuto(idAuto)
-                System.out.println("L'auto selezionata non è presente nel database. Si desidera inserirla adesso? (S/n)");
+            if (!clienteController.isAuto(idAuto)) {  //TODO controllare
+                System.out.println("L'auto selezionata non è presente nel database.");
+
+                System.out.println("Tornare al menu utente e cancellare l'operazione? (s/n)");
                 confermaInput = scanner.next();
 
-                if (confermaInput.equals("s") || confermaInput.equals("S")) {
-                    MenuAutoProprietario menuAutoProprietario = new MenuAutoProprietario(this.controller);
-                    Auto auto = menuAutoProprietario.displayAggiungiAuto();
-                    if (auto == null) {
-                        return null;
-                    }
-                    idAuto = Integer.toString(auto.getID());
+                if (confermaInput.equals("s")) {
+                    termina = true;
+                    continue;
                 } else {
-                    System.out.println("Tornare al menu utente e cancellare l'operazione? (s/n)");
-                    confermaInput = scanner.next();
-
-                    if (confermaInput.equals("s")) {
-                        termina = true;
-                        continue;
-                    } else {
-                        continue;
-                    }
+                    continue;
                 }
-            } else if (true) { //TODO controller.isNoleggiata(idAuto)
+
+            } else if (clienteController.isNoleggiata(idAuto)) { //TODO controllare
                 System.out.println("L'auto selezionata è già affittata.");
                 System.out.println("Tornare al menu utente e cancellare l'operazione? (s/n)");
                 confermaInput = scanner.next();
@@ -105,7 +90,7 @@ public class MenuContrattiCliente extends Menu {
             LocalDate fine = LocalDate.parse(dataFine, DateTimeFormatter.ISO_LOCAL_DATE);
 
             long giorniNoleggio = ChronoUnit.DAYS.between(inizio, fine);// Calcola la differenza in giorni tra le due date
-            float totale =  giorniNoleggio; //TODO controller.getPrezzoGiornaliero(idAuto) *
+            float totale = clienteController.getPrezzoGiornaliero(idAuto) *giorniNoleggio; //TODO controllare
             System.out.print("Totale: " + totale);
 
             System.out.println("Confermi i dati inseriti? (S/n) ");

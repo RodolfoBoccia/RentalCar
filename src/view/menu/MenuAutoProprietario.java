@@ -1,6 +1,7 @@
 package view.menu;
 
-import controller.Controller;
+import controller.ClienteController;
+import controller.ProprietarioController;
 import model.Auto;
 import model.AutoBuilder;
 
@@ -11,8 +12,8 @@ public class MenuAutoProprietario extends Menu {
             " 3 - Ultima revisione\n" + //TODO aggiungere revisione controllare
             " x - Applica modifiche";
 
-    public MenuAutoProprietario(Controller controller) {
-        super(controller);
+    public MenuAutoProprietario(ProprietarioController proprietarioController) {
+        super(proprietarioController);
     }
 
     public void display() {
@@ -34,7 +35,7 @@ public class MenuAutoProprietario extends Menu {
                     displayAggiungiAuto();
                     continue;
                 case "2":
-                    //controller.mostraAuto();
+                    proprietarioController.mostraAuto();
                     continue;
                 case "3":
                     displayModificaAuto();
@@ -88,7 +89,7 @@ public class MenuAutoProprietario extends Menu {
 
                 if (confermaInput.equals("s") || confermaInput.equals("S")) {
                     Auto auto = builder.build();
-                   // controller.aggiungiAuto(auto);
+                    proprietarioController.aggiungiAuto(auto);
                     System.out.println("Auto aggiunta con successo.");
                     return auto;
                 } else {
@@ -110,14 +111,14 @@ public class MenuAutoProprietario extends Menu {
     }
 
     private void displayModificaAuto() {
-        //controller.mostraAuto();
+        proprietarioController.mostraAuto();
         String idAuto;
         String confermaInput;
 
         System.out.println("Inserire l'ID dell'auto che si desidera modificare (come indicato in tabella)");
         System.out.print("ID: ");
         idAuto = scanner.next();
-        if (true) { //TODO controller.isAuto(idAuto)
+        if (proprietarioController.isAuto(idAuto)) { //TODO controllare
             boolean termina = false;
             String input;
             AutoBuilder builder = new AutoBuilder();
@@ -157,7 +158,7 @@ public class MenuAutoProprietario extends Menu {
             confermaInput = scanner.next();
             if (confermaInput.equals("s") || confermaInput.equals("S")) {
                 Auto auto = builder.build();
-               // controller.modificaAuto(idAuto, auto);
+                proprietarioController.modificaAuto(idAuto, auto);
                 System.out.println("Auto modificata");
             }
         } else {
@@ -166,19 +167,19 @@ public class MenuAutoProprietario extends Menu {
     }
 
     private void displayRimuoviAuto() {
-        //controller.mostraAuto();
+        proprietarioController.mostraAuto();
         String idAuto;
         String confermaInput;
 
         System.out.println("Inserire l'ID dell'auto che si desidera rimuovere (come indicato in tabella)");
         System.out.print("ID: ");
         idAuto = scanner.next();
-        if (true) { //TODO controller.isAuto(idAuto)
+        if (proprietarioController.isAuto(idAuto)) { //TODO controllare
             System.out.println("Rimuovere definitivamente l'auto con ID " + idAuto + "?");
             System.out.print("ATTENZIONE: verranno rimossi anche eventuali clienti e contratto ad esso associati (S/n) ");
             confermaInput = scanner.next(); //TODO controllare rimozione cliente e contratto
             if (confermaInput.equals("s") || confermaInput.equals("S")) {
-                //controller.rimuoviAuto(idAuto);
+                proprietarioController.rimuoviAuto(idAuto);
                 System.out.println("Rimossa auto con ID " + idAuto);
             }
         } else {

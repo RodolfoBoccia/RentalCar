@@ -1,10 +1,8 @@
 package view.menu;
 
-import controller.Controller;
-import model.Contratto;
-import model.ContrattoBuilder;
-import model.Auto;
-import model.Cliente;
+import controller.ClienteController;
+import controller.ProprietarioController;
+import model.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -12,8 +10,8 @@ import java.time.temporal.ChronoUnit;
 
 public class MenuContrattiProprietario extends Menu {
 
-    public MenuContrattiProprietario(Controller controller) {
-        super(controller);
+    public MenuContrattiProprietario(ProprietarioController proprietarioController) {
+        super(proprietarioController);
     }
 
     public void display() {
@@ -34,7 +32,7 @@ public class MenuContrattiProprietario extends Menu {
                     displayAggiungiContratto();
                     continue;
                 case "2":
-                    //controller.mostraContratti();
+                    proprietarioController.mostraContratti();
                     continue;
                 case "3":
                     displayRimuoviContratto();
@@ -48,10 +46,30 @@ public class MenuContrattiProprietario extends Menu {
         }
     }
 
-    public void displayAggiungiContratto() { //TODO si puo fare contratto con cliente gia esistente
-        System.out.println("Per creare un contratto è necessario creare prima il cliente a cui è associato.");
-        MenuClienti menuClienti = new MenuClienti(this.controller);
-        menuClienti.displayAggiungiCliente();
+    public void displayAggiungiContratto() { //TODO si puo fare contratto con cliente gia esistente CONTROLLARE
+        String confermaInput;
+        System.out.println("Vuoi creare un contratto per un cliente già registrato? (S/n)");
+        confermaInput = scanner.next();
+
+        if (confermaInput.equals("s") || confermaInput.equals("S")) {
+            proprietarioController.mostraClienti();
+            String idCliente;
+            System.out.println("Inserire l'ID dell cliente che si desidera modificare (come indicato in tabella)");
+            System.out.print("ID: ");
+            idCliente = scanner.next();
+
+            if (proprietarioController.isCliente(idCliente)) {
+                Cliente cliente = proprietarioController.getCliente(idCliente);
+                Contratto contratto = displayAggiungiContratto(cliente);
+                proprietarioController.aggiungiContratto(contratto);
+                System.out.println("Contratto aggiunto con successo.");
+            } else {
+                System.out.println("Non esiste nessun cliente con l'ID selezionato.");
+            }
+        } else {
+            MenuClienti menuClienti = new MenuClienti(this.proprietarioController);
+            menuClienti.displayAggiungiCliente();
+        }
     }
 
     public Contratto displayAggiungiContratto(Cliente cliente) {
@@ -61,16 +79,16 @@ public class MenuContrattiProprietario extends Menu {
         System.out.println("Inserisci i dati del contratto");
 
         while (!termina) {
-            //controller.mostraAuto();
+            proprietarioController.mostraAuto();
             System.out.print("ID dell'auto come indicato nella tabella: ");
             String idAuto = scanner.next();
 
-            if (true) { //TODO !controller.isAuto(idAuto)
+            if (!proprietarioController.isAuto(idAuto)) { //TODO controllare
                 System.out.println("L'auto selezionata non è presente nel database. Si desidera inserirla adesso? (S/n)");
                 confermaInput = scanner.next();
 
                 if (confermaInput.equals("s") || confermaInput.equals("S")) {
-                    MenuAutoProprietario menuAutoProprietario = new MenuAutoProprietario(this.controller);
+                    MenuAutoProprietario menuAutoProprietario = new MenuAutoProprietario(this.proprietarioController);
                     Auto auto = menuAutoProprietario.displayAggiungiAuto();
                     if (auto == null) {
                         return null;
@@ -87,7 +105,7 @@ public class MenuContrattiProprietario extends Menu {
                         continue;
                     }
                 }
-            } else if (true) { //TODO controller.isNoleggiata(idAuto)
+            } else if (proprietarioController.isNoleggiata(idAuto)) { //TODO controllare
                 System.out.println("L'auto selezionata è già affittata.");
                 System.out.println("Tornare al menu utente e cancellare l'operazione? (s/n)");
                 confermaInput = scanner.next();
@@ -109,7 +127,7 @@ public class MenuContrattiProprietario extends Menu {
             LocalDate fine = LocalDate.parse(dataFine, DateTimeFormatter.ISO_LOCAL_DATE);
 
             long giorniNoleggio = ChronoUnit.DAYS.between(inizio, fine);// Calcola la differenza in giorni tra le due date
-            float totale =  giorniNoleggio; //TODO controller.getPrezzoGiornaliero(idAuto) *
+            float totale = proprietarioController.getPrezzoGiornaliero(idAuto) * giorniNoleggio; //TODO controllare
             System.out.print("Totale: " + totale);
 
             System.out.println("Confermi i dati inseriti? (S/n) ");
@@ -140,19 +158,19 @@ public class MenuContrattiProprietario extends Menu {
     }
 
     private void displayRimuoviContratto() {
-        //controller.mostraContratti();
+        proprietarioController.mostraContratti();
         String idContratto;
         String confermaInput;
 
         System.out.println("Inserire l'ID del contratto che si desidera rimuovere (come indicato in tabella)");
         System.out.print("ID: ");
         idContratto = scanner.next();
-        if (true) { //TODO controller.isContratto(idContratto)
+        if (proprietarioController.isContratto(idContratto)) { //TODO controllare
             System.out.println("Rimuovere definitivamente il contratto con ID: " + idContratto + "?");
             //TODO togliere rimozione cliente
             confermaInput = scanner.next();
             if (confermaInput.equals("s") || confermaInput.equals("S")) {
-                //controller.rimuoviContratto(idContratto);
+                proprietarioController.rimuoviContratto(idContratto);
                 System.out.println("Rimosso contratto con ID: " + idContratto);
             }
         } else {

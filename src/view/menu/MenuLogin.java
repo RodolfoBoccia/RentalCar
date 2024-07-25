@@ -1,23 +1,19 @@
 package view.menu;
 
-import controller.Controller;
-import model.Cliente;
+import controller.LoginController;
+import model.ClienteBuilder;
 
 
 public class MenuLogin extends Menu {
 
-    public MenuLogin(Controller controller) {
-        super(controller);
-    }
-
     public MenuLogin() {
-        super();
+        super(new LoginController());
     }
 
     public void display() {
 
         System.out.println("Benvenuto nell'app di noleggio auto!");
-        boolean termina = false; //TODO
+        boolean termina = false;
 
         while (!termina) {
             System.out.println("Digita uno dei seguenti numeri per scegliere l'operazione:");
@@ -56,17 +52,14 @@ public class MenuLogin extends Menu {
             System.out.print("Password: ");
             String password = scanner.next();
 
-            if (true) { //TODO controller.isAccountProprietario(email, password)
-                //controller.setProprietario(email, password);
+            if (loginController.isAccountProprietario(email, password)) { //TODO controllare
+                proprietarioController.setProprietario(email, password);
                 MenuFacadeProprietario menuFacadeProprietario = new MenuFacadeProprietario();
                 menuFacadeProprietario.display();
-                //return true;
 
-            } else if (true) { //TODO controller.isAccountCliente(email, password)
-                controller.setLoggatoCliente();
+            } else if (loginController.isAccountCliente(email, password)) { //TODO controllare
                 MenuFacadeCliente menuFacadeCliente = new MenuFacadeCliente();
                 menuFacadeCliente.display();
-               // return true;
 
             } else {
                 System.out.println("Email o password errate.");
@@ -79,7 +72,6 @@ public class MenuLogin extends Menu {
                 }
             }
         }
-       // return false;
     }
 
     public void displayRegistrazione() {
@@ -91,9 +83,8 @@ public class MenuLogin extends Menu {
         while (!verificato) {
             System.out.print("Email: ");
             email = scanner.next();
-            if (true) { //TODO !controller.emailDisponibile(email)
+            if (!loginController.emailDisponibile(email)) { //TODO controllare
                 System.out.println("Email già associata a un account. Riprovare? (s/n)");
-                // Ho aggiunto lo stesso giochino del riprova per evitare loop infiniti di email non disponibili
                 scanner.next().toLowerCase().getChars(0, 1, riprova, 0);
                 if (riprova[0] != 's') {
                     return;
@@ -118,8 +109,13 @@ public class MenuLogin extends Menu {
         String confermaInput = scanner.next();
 
         if (confermaInput.equals("S") || confermaInput.equals("s")) {
-            Cliente c = new Cliente(email, psw, nome, cognome, cf); //TODO controllare
-            //controller.aggiungiCliente(c);
+            ClienteBuilder c = new ClienteBuilder(); //TODO controllare
+            c.nome(nome);
+            c.cognome(cognome);
+            c.cf(cf);
+            c.email(email);
+            c.password(psw);
+            loginController.aggiungiCliente(c.build()); //TODO
 
             System.out.println("Registrazione avvenuta con successo");
         }

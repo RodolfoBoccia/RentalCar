@@ -1,11 +1,7 @@
 package view.menu;
 
-import controller.Controller;
+import controller.ClienteController;
 import model.Cliente;
-import model.Proprietario;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class MenuUtente extends Menu {
@@ -15,19 +11,15 @@ public class MenuUtente extends Menu {
             " 4 - Password\n" +
             " x - Applica modifiche";
 
-    public MenuUtente(Controller controller) {
-        super(controller);
+    public MenuUtente(ClienteController clienteController) {
+        super(clienteController);
     }
 
     public void display() {
-        return;             // solo per avere una signature coerente con la superclasse
-    }
-
-    public boolean display(int n) {
 
         boolean termina = false;
 
-        while(!termina){
+        while (!termina) {
             System.out.println("Scegli l'operazione da eseguire: ");
             System.out.println(" 1 - Modifica dati utente");
             System.out.println(" 2 - Elimina utente");
@@ -40,11 +32,10 @@ public class MenuUtente extends Menu {
                     displayModifica();
                     continue;
                 case "2":
-                    if(displayRimuovi()) {
-                        controller.reset();
-                        return true;    // se ritorno true vuol dire che ho eliminato l'utente
+                    if (displayRimuovi()) {
+                        clienteController.reset();
                     }
-                     continue;
+                    continue;
                 case "x":
                     termina = true;
                     continue;
@@ -52,16 +43,15 @@ public class MenuUtente extends Menu {
                     System.out.println("Valore inserito non valido");
             }
         }
-        return false;
     }
 
     private boolean displayRimuovi() {
-        System.out.println("Desideri rimuovere definitivamente l'utente con codice fiscale " +
-                controller.getProprietario().getCf() + " e tutti i dati ad esso associato?(S/n) ");
+        System.out.println("Desideri rimuovere definitivamente l'utente con codice fiscale: " +
+                clienteController.getCliente().getCf() + " e tutti i dati ad esso associato?(S/n) ");
         String confermaInput = scanner.next();
 
         if (confermaInput.equals("s") || confermaInput.equals("S")) {
-            //controller.rimuoviProprietario();
+            clienteController.rimuoviUtente();
             System.out.println("Utente rimosso dal sistema");
             return true;
         }
@@ -72,9 +62,9 @@ public class MenuUtente extends Menu {
         String confermaInput;
         String input;
         boolean termina = false;
-        Proprietario proprietario = controller.getProprietario();
+        Cliente cliente = clienteController.getCliente();
 
-        while(!termina) {
+        while (!termina) {
 
             System.out.println("Scegliere l'attributo che si desidera modificare:");
             System.out.println(listaOpzioniModifica);
@@ -83,22 +73,22 @@ public class MenuUtente extends Menu {
                 case "1":
                     System.out.print("Inserire il nuovo nome: ");
                     input = scanner.next();
-                    proprietario.setNome(input);
+                    cliente.setNome(input);
                     continue;
                 case "2":
                     System.out.print("Inserire il nuovo cognome: ");
                     input = scanner.next();
-                    proprietario.setCognome(input);
+                    cliente.setCognome(input);
                     continue;
                 case "3":
                     System.out.print("Inserire il nuovo indirizzo email: ");
                     input = scanner.next();
-                    proprietario.setEmail(input);
+                    cliente.setEmail(input);
                     continue;
                 case "4":
                     System.out.print("Inserire la nuova password: ");
                     input = scanner.next();
-                    proprietario.setPassword(input);
+                    cliente.setPassword(input);
                     continue;
                 case "x":
                     termina = true;
@@ -109,12 +99,11 @@ public class MenuUtente extends Menu {
         }
 
         System.out.println("Applicare le modifiche all'utente?");
-        confermaInput=scanner.next();
+        confermaInput = scanner.next();
         if (confermaInput.equals("s") || confermaInput.equals("S")) {
-           // controller.modificaProprietario(proprietario);
+            clienteController.modificaCliente(cliente);
             System.out.println("Utente modificato");
-        }
-        else {
+        } else {
             System.out.println("Operazione annullata");
         }
     }

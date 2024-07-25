@@ -1,20 +1,33 @@
 package view.menu;
 
-import controller.Controller;
+import controller.ClienteController;
+import controller.LoginController;
+import controller.ProprietarioController;
 
 import java.util.Scanner;
 
 public abstract class Menu {
     protected Scanner scanner;
-    protected static Controller controller;
+    protected static ProprietarioController proprietarioController;
+    protected static ClienteController clienteController;
+    protected static LoginController loginController;
 
-    Menu(Controller controller) {
-        this.controller = controller;
+    Menu() {
+    }
+
+    public Menu(LoginController loginController) {
+        this.loginController = loginController;
         this.scanner = new Scanner(System.in);
     }
 
-    public Menu() {
+    public Menu(ProprietarioController proprietarioController) {
+        this.proprietarioController = proprietarioController;
+        this.scanner = new Scanner(System.in);
+    }
 
+    public Menu(ClienteController clienteController) {
+        this.clienteController = clienteController;
+        this.scanner = new Scanner(System.in);
     }
 
     public abstract void display();

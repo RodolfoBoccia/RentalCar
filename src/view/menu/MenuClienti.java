@@ -1,23 +1,17 @@
 package view.menu;
 
-import controller.Controller;
+import controller.ProprietarioController;
 import model.*;
 
 public class MenuClienti extends Menu {
     private static String listaOpzioniModifica = " 1 - Codice fiscale\n" +
             " 2 - Nome\n" +
             " 3 - Cognome\n" +
-            " 4 - Data di nascita\n" +
-            " 5 - Città di nascita\n" +
-            " 6 - Residenza\n" +
-            " 7 - Telefono\n" +
-            " 8 - Email\n" +
-            " 9 - Totale dovuto\n" +
-            " 10 - Totale pagato\n" +
+            " 4 - Email\n" +
             " x - Applica modifiche";
 
-    public MenuClienti(Controller controller) {
-        super(controller);
+    public MenuClienti(ProprietarioController proprietarioController) {
+        super(proprietarioController);
     }
 
     public void display() {
@@ -39,7 +33,7 @@ public class MenuClienti extends Menu {
                     displayAggiungiCliente();
                     continue;
                 case "2":
-                    //controller.mostraClienti(); TODO da definire
+                    proprietarioController.mostraClienti(); //TODO da controllare
                     continue;
                 case "3":
                     displayModificaCliente();
@@ -79,11 +73,11 @@ public class MenuClienti extends Menu {
 
             if (confermaInput.equals("s") || confermaInput.equals("S")) {
                 Cliente cliente = new Cliente(cf, nome, cognome, email, password);
-                MenuContrattiProprietario menuContrattiProprietario = new MenuContrattiProprietario(controller);
+                MenuContrattiProprietario menuContrattiProprietario = new MenuContrattiProprietario(proprietarioController);
                 Contratto contratto = menuContrattiProprietario.displayAggiungiContratto(cliente);
                 if(contratto != null) {
-                   //controller.aggiungiCliente(cliente); TODO da definire
-                    //controller.aggiungiContratto(contratto);TODO da definire
+                    proprietarioController.aggiungiCliente(cliente); //TODO controllare
+                    proprietarioController.aggiungiContratto(contratto); //TODO da controllare
                     System.out.println("Cliente e relativo contratto aggiunti con successo.");
                     return cliente;
                 }
@@ -100,7 +94,7 @@ public class MenuClienti extends Menu {
     }
 
     public void displayModificaCliente() {
-        //controller.mostraClienti(); TODO da definire
+        proprietarioController.mostraClienti(); //TODO da controllare
         String idCliente;
         String confermaInput;
 
@@ -108,7 +102,7 @@ public class MenuClienti extends Menu {
         System.out.print("ID: ");
         idCliente = scanner.next();
 
-        if(controller.isCliente(idCliente)) {
+        if(proprietarioController.isCliente(idCliente)) {
             boolean termina=false;
             String input;
             ClienteBuilder builder = new ClienteBuilder();
@@ -149,7 +143,7 @@ public class MenuClienti extends Menu {
                 confermaInput=scanner.next();
                 if (confermaInput.equals("s") || confermaInput.equals("S")) {
                     Cliente cliente = builder.build();
-                    //controller.modificaCliente(idCliente, cliente); TODO da definire
+                    proprietarioController.modificaCliente(idCliente, cliente); //TODO da controllare
                     System.out.println("Cliente modificato");
                 }
 
@@ -160,7 +154,7 @@ public class MenuClienti extends Menu {
     }
 
     public void displayRimuoviCliente() {
-        //controller.mostraClienti(); TODO da definire
+        proprietarioController.mostraClienti(); //TODO da controllare
         String idCliente;
         String confermaInput;
 
@@ -168,12 +162,12 @@ public class MenuClienti extends Menu {
         System.out.print("ID: ");
         idCliente = scanner.next();
 
-        if(controller.isCliente(idCliente)) {
+        if(proprietarioController.isCliente(idCliente)) {
             System.out.println("Rimuovere definitivamente il cliente con ID: " + idCliente +
                     " e il relativo contratto? (S/n)");
             confermaInput = scanner.next();
             if (confermaInput.equals("s") || confermaInput.equals("S")) {
-                //controller.rimuoviCliente(idCliente); TODO da definire
+                proprietarioController.rimuoviCliente(idCliente); //TODO da controllare
                 System.out.println("Rimosso cliente con ID: " + idCliente);
             }
         }
