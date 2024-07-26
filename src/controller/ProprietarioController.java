@@ -29,9 +29,9 @@ public class ProprietarioController {
         return false;
     }
 
-    public void setProprietario(String email, String password) {
+    public void setProprietario(int id) {
         ProprietarioDAO proprietarioDao = new ProprietarioDAO();
-        proprietario = proprietarioDao.select(email, password);
+        proprietario = proprietarioDao.select(id);
     }
 
     public boolean isLoggatoProprietario() {
@@ -49,7 +49,7 @@ public class ProprietarioController {
     public boolean isNoleggiata(String idAuto) { //TODO
         try {
             AutoDAO autoDAO = new AutoDAO();
-            return autoDAO.select(Integer.parseInt(idAuto), proprietario.getCf()).isNoleggiata();
+            return autoDAO.select(Integer.parseInt(idAuto)).isNoleggiata();
         } catch (NumberFormatException e) {
             System.out.println("L'ID auto non è valido");
         }
@@ -59,7 +59,7 @@ public class ProprietarioController {
     public boolean isCliente(String idCLiente) {
         try {
             ClienteDAO clienteDAO = new ClienteDAO();
-            return clienteDAO.select(Integer.parseInt(idCLiente), proprietario.getCf()) != null;
+            return clienteDAO.select(Integer.parseInt(idCLiente)) != null;
         } catch (NumberFormatException e) {
             System.out.println("L'ID inserito non è un valore valido");
         }
@@ -69,7 +69,7 @@ public class ProprietarioController {
     public boolean isContratto(String idContratto) {
         try {
             ContrattoDAO contrattoDao = new ContrattoDAO();
-            return contrattoDao.select(Integer.parseInt(idContratto), proprietario.getCf()) != null;
+            return contrattoDao.select(Integer.parseInt(idContratto)) != null;
         } catch (NumberFormatException e) {
             System.out.println("L'ID inserito non è un valore valido");
         }
@@ -79,7 +79,7 @@ public class ProprietarioController {
     public float getPrezzoGiornaliero(String idAuto) {
         try {
             AutoDAO autoDAO = new AutoDAO();
-            return autoDAO.select(Integer.parseInt(idAuto), proprietario.getCf()).getPrezzoGiornaliero();
+            return autoDAO.select(Integer.parseInt(idAuto)).getPrezzoGiornaliero();
         } catch (NumberFormatException e) {
             System.out.println("L'ID inserito non è un valore valido");
         }
@@ -104,7 +104,7 @@ public class ProprietarioController {
     public boolean isAuto(String idAuto) {
         try {
             AutoDAO autoDAO = new AutoDAO();
-            return autoDAO.select(Integer.parseInt(idAuto), proprietario.getCf()) != null;
+            return autoDAO.select(Integer.parseInt(idAuto)) != null;
         } catch (NumberFormatException e) {
             System.out.println();
         }
@@ -113,14 +113,14 @@ public class ProprietarioController {
 
     public boolean modificaAuto(String idAuto, Auto auto) {
         AutoDAO autoDAO = new AutoDAO();
-        boolean esito = autoDAO.update(Integer.parseInt(idAuto), auto,"");
+        boolean esito = autoDAO.update(Integer.parseInt(idAuto), auto);
         aggiorna();
         return esito;
     }
 
     public boolean aggiungiAuto(Auto auto) {
         AutoDAO autoDAO = new AutoDAO();
-        auto.setIdProprietario(proprietario.getCf());
+        auto.setIdProprietario(proprietario.getID());
         boolean esito = autoDAO.insert(auto);
         List<Auto> autos = autoDAO.selectAll();
         for(Auto i: autos) {
@@ -137,7 +137,7 @@ public class ProprietarioController {
         boolean esito = false;
         try {
             AutoDAO autoDAO = new AutoDAO();
-            esito = autoDAO.delete(Integer.parseInt(idAuto), proprietario.getCf());
+            esito = autoDAO.delete(Integer.parseInt(idAuto));
             aggiorna();
         } catch (NumberFormatException e) {
             System.out.println("L'ID inserito non è un valore valido");
@@ -147,7 +147,7 @@ public class ProprietarioController {
 
     public boolean modificaCliente(String idCliente, Cliente cliente) {
         ClienteDAO clienteDAO = new ClienteDAO();
-        boolean esito = clienteDAO.update(Integer.parseInt(idCliente), cliente, proprietario.getCf());
+        boolean esito = clienteDAO.update(Integer.parseInt(idCliente), cliente);
         aggiorna();
         return esito;
     }
@@ -155,7 +155,7 @@ public class ProprietarioController {
     public Cliente getCliente(String idCliente) {
         try {
             ClienteDAO clienteDAO = new ClienteDAO();
-            return clienteDAO.select(Integer.parseInt(idCliente), proprietario.getCf());
+            return clienteDAO.select(Integer.parseInt(idCliente));
         } catch (NumberFormatException e) {
             System.out.println("L'ID inserito non è un valore valido");
         }
@@ -173,7 +173,7 @@ public class ProprietarioController {
         boolean esito = false;
         try {
             ClienteDAO clienteDAO = new ClienteDAO();
-            esito = clienteDAO.delete(Integer.parseInt(idCliente), proprietario.getCf());
+            esito = clienteDAO.delete(Integer.parseInt(idCliente));
             aggiorna();
         } catch (NumberFormatException e) {
             System.out.println("L'ID inserito non è un valore valido");
@@ -201,7 +201,7 @@ public class ProprietarioController {
         boolean esito = false;
         try {
             ContrattoDAO contrattoDao = new ContrattoDAO();
-            esito = contrattoDao.delete(Integer.parseInt(idContratto), proprietario.getCf());
+            esito = contrattoDao.delete(Integer.parseInt(idContratto));
             aggiorna();
         } catch (NumberFormatException e) {
             System.out.println("L'ID inserito non è un valore valido");
@@ -231,7 +231,7 @@ public class ProprietarioController {
                     }
                 }
                 i.setNoleggiata(affittato);
-                autoDAO.update(i.getID(), i, "");
+                autoDAO.update(i.getID(), i);
             }
 
 

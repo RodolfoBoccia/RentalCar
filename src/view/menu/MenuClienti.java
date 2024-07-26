@@ -67,12 +67,14 @@ public class MenuClienti extends Menu {
             String email = scanner.nextLine();
             System.out.print("Password: ");
             String password = scanner.nextLine();
+            System.out.print("ID: "); //TODO da controllare
+            int id = scanner.nextInt();
 
             System.out.println("Confermi i dati inseriti? (S/n)");
             String confermaInput = scanner.next();
 
             if (confermaInput.equals("s") || confermaInput.equals("S")) {
-                Cliente cliente = new Cliente(cf, nome, cognome, email, password);
+                Cliente cliente = new Cliente(cf, nome, cognome, email, password, id);
                 MenuContrattiProprietario menuContrattiProprietario = new MenuContrattiProprietario(proprietarioController);
                 Contratto contratto = menuContrattiProprietario.displayAggiungiContratto(cliente);
                 if(contratto != null) {

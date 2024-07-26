@@ -24,7 +24,7 @@ public class ClienteController {
     public boolean isAuto(String idAuto) {
         try {
             AutoDAO autoDAO = new AutoDAO();
-            return autoDAO.select(Integer.parseInt(idAuto), cliente.getCf()) != null;
+            return autoDAO.select(Integer.parseInt(idAuto)) != null;
         } catch (NumberFormatException e) {
             System.out.println();
         }
@@ -34,7 +34,7 @@ public class ClienteController {
     public boolean isNoleggiata(String idAuto) { //TODO
         try {
             AutoDAO autoDAO = new AutoDAO();
-            return autoDAO.select(Integer.parseInt(idAuto), cliente.getCf()).isNoleggiata();
+            return autoDAO.select(Integer.parseInt(idAuto)).isNoleggiata();
         } catch (NumberFormatException e) {
             System.out.println("L'ID auto non è valido");
         }
@@ -44,7 +44,7 @@ public class ClienteController {
     public float getPrezzoGiornaliero(String idAuto) {
         try {
             AutoDAO autoDAO = new AutoDAO();
-            return autoDAO.select(Integer.parseInt(idAuto), cliente.getCf()).getPrezzoGiornaliero();
+            return autoDAO.select(Integer.parseInt(idAuto)).getPrezzoGiornaliero();
         } catch (NumberFormatException e) {
             System.out.println("L'ID inserito non è un valore valido");
         }
@@ -54,16 +54,16 @@ public class ClienteController {
     public Cliente getCliente() {
         try {
             ClienteDAO clienteDAO = new ClienteDAO();
-            return clienteDAO.select(cliente.getID(), cliente.getCf()); //TODO rimuovere secondo parametro
+            return clienteDAO.select(cliente.getID());
         } catch (NumberFormatException e) {
             System.out.println("L'ID inserito non è un valore valido");
         }
         return null;
     }
 
-    public void setCliente(String email, String password) {
+    public void setCliente(int id) {
         ClienteDAO clienteDAO = new ClienteDAO();
-        cliente = clienteDAO.select(email, password);
+        cliente = clienteDAO.select(id);
     }
 
     public List<Auto> getAllAuto() {
@@ -99,7 +99,7 @@ public class ClienteController {
 
     public boolean modificaCliente(Cliente nuocoCliente) {
         ClienteDAO clienteDAO = new ClienteDAO();
-        boolean esito = clienteDAO.update(0, nuocoCliente, cliente.getCf());
+        boolean esito = clienteDAO.update(0, nuocoCliente);
         cliente = nuocoCliente;
         aggiorna();
         return esito;
@@ -107,7 +107,7 @@ public class ClienteController {
 
     public boolean rimuoviUtente() {
         ClienteDAO clienteDAO = new ClienteDAO();
-        boolean esito = clienteDAO.delete(0, cliente.getCf());
+        boolean esito = clienteDAO.delete(0);
         aggiorna();
         return esito;
     }
@@ -134,7 +134,7 @@ public class ClienteController {
                     }
                 }
                 i.setNoleggiata(affittato);
-                autoDAO.update(i.getID(), i, "");
+                autoDAO.update(i.getID(), i);
             }
 
 

@@ -4,9 +4,10 @@ package model;
 public class Cliente extends Utente{
     private int ID;
 
-    public Cliente(String cf, String nome, String cognome, String email, String password)
+    public Cliente(String cf, String nome, String cognome, String email, String password, int id)
     {
         super(cf, nome, cognome, email, password);
+        this.ID = id;
     }
 
     protected Cliente(ClienteBuilder clienteBuilder) {

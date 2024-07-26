@@ -7,7 +7,7 @@ public class AutoBuilder {
     protected String alimentazione;
     protected float prezzoGiornaliero;
     protected boolean noleggiata;
-    protected String idProprietario;
+    protected int idProprietario;
     protected String marca;
     protected String modello;
     protected String cambio;
@@ -44,7 +44,7 @@ public class AutoBuilder {
         return this;
     }
 
-    public AutoBuilder idProprietario(String idProprietario) {
+    public AutoBuilder idProprietario(int idProprietario) {
         this.idProprietario = idProprietario;
         return this;
     }

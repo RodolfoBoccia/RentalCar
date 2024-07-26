@@ -8,7 +8,8 @@ public class Auto {
     private String alimentazione;
     private float prezzoGiornaliero;
     private boolean noleggiata;
-    private String idProprietario;
+
+    private int idProprietario;
     private String marca;
     private String modello;
     private String cambio;
@@ -29,6 +30,23 @@ public class Auto {
         this.ultimaRevisione = builder.ultimaRevisione;
         this.ID = builder.id;
     }
+
+    public Auto(String targa, int numeroPosti, String categoria, String alimentazione, float prezzoGiornaliero, boolean noleggiata, int idProprietario, String marca, String modello, String cambio, String ultimaRevisione, int ID) {
+        this.targa = targa;
+        this.numeroPosti = numeroPosti;
+        this.categoria = categoria;
+        this.alimentazione = alimentazione;
+        this.prezzoGiornaliero = prezzoGiornaliero;
+        this.noleggiata = noleggiata;
+        this.idProprietario = idProprietario;
+        this.marca = marca;
+        this.modello = modello;
+        this.cambio = cambio;
+        this.ultimaRevisione = ultimaRevisione;
+        this.ID = ID;
+    }
+
+
 
     public boolean isNoleggiata() {
         return noleggiata;
@@ -78,11 +96,11 @@ public class Auto {
         this.prezzoGiornaliero = prezzoGiornaliero;
     }
 
-    public String getIdProprietario() {
+    public int getIdProprietario() {
         return idProprietario;
     }
 
-    public void setIdProprietario(String idProprietario) {
+    public void setIdProprietario(int idProprietario) {
         this.idProprietario = idProprietario;
     }
 

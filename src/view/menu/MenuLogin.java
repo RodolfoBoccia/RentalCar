@@ -52,8 +52,11 @@ public class MenuLogin extends Menu {
             System.out.print("Password: ");
             String password = scanner.next();
 
+            System.out.print("id: ");
+            int id = Integer.parseInt(scanner.next());
+
             if (loginController.isAccountProprietario(email, password)) { //TODO controllare
-                proprietarioController.setProprietario(email, password);
+                proprietarioController.setProprietario(id);
                 MenuFacadeProprietario menuFacadeProprietario = new MenuFacadeProprietario();
                 menuFacadeProprietario.display();
 

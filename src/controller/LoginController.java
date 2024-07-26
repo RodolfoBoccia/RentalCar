@@ -104,7 +104,7 @@ public class LoginController {
                     }
                 }
                 i.setNoleggiata(affittato);
-                autoDAO.update(i.getID(), i, "");
+                autoDAO.update(i.getID(), i);
             }
 
 
