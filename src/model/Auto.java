@@ -1,14 +1,12 @@
 package model;
 
 public class Auto {
-
     private String targa;
     private int numeroPosti;
     private String categoria;
     private String alimentazione;
     private float prezzoGiornaliero;
     private boolean noleggiata;
-
     private int idProprietario;
     private String marca;
     private String modello;
@@ -31,23 +29,6 @@ public class Auto {
         this.ID = builder.id;
     }
 
-    public Auto(String targa, int numeroPosti, String categoria, String alimentazione, float prezzoGiornaliero, boolean noleggiata, int idProprietario, String marca, String modello, String cambio, String ultimaRevisione, int ID) {
-        this.targa = targa;
-        this.numeroPosti = numeroPosti;
-        this.categoria = categoria;
-        this.alimentazione = alimentazione;
-        this.prezzoGiornaliero = prezzoGiornaliero;
-        this.noleggiata = noleggiata;
-        this.idProprietario = idProprietario;
-        this.marca = marca;
-        this.modello = modello;
-        this.cambio = cambio;
-        this.ultimaRevisione = ultimaRevisione;
-        this.ID = ID;
-    }
-
-
-
     public boolean isNoleggiata() {
         return noleggiata;
     }
@@ -68,24 +49,12 @@ public class Auto {
         return numeroPosti;
     }
 
-    public void setNumeroPosti(int numeroPosti) {
-        this.numeroPosti = numeroPosti;
-    }
-
     public String getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
-    }
-
     public String getAlimentazione() {
         return alimentazione;
-    }
-
-    public void setAlimentazione(String alimentazione) {
-        this.alimentazione = alimentazione;
     }
 
     public float getPrezzoGiornaliero() {
@@ -108,32 +77,16 @@ public class Auto {
         return marca;
     }
 
-    public void setMarca(String marca) {
-        this.marca = marca;
-    }
-
     public String getModello() {
         return modello;
-    }
-
-    public void setModello(String modello) {
-        this.modello = modello;
     }
 
     public int getID() {
         return ID;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
-    }
-
     public String getCambio() {
         return cambio;
-    }
-
-    public void setCambio(String cambio) {
-        this.cambio = cambio;
     }
 
     public String getUltimaRevisione() {

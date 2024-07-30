@@ -16,12 +16,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.Objects;
 
 public class LoginController {
-    private TabellaClienti tabellaClienti = new TabellaClienti();
-    private TabellaAuto tabellaAuto = new TabellaAuto();
-    private TabellaContratti tabellaContratti = new TabellaContratti();
+    private final TabellaClienti tabellaClienti = new TabellaClienti();
+    private final TabellaAuto tabellaAuto = new TabellaAuto();
+    private final TabellaContratti tabellaContratti = new TabellaContratti();
 
     public List<Auto> getAllAuto() {
         AutoDAO autoDAO = new AutoDAO();
@@ -40,77 +39,59 @@ public class LoginController {
 
     public boolean isAccountProprietario(String email, String password) {
         ProprietarioDAO proprietarioDao = new ProprietarioDAO();
-        List<Proprietario> proprietari = proprietarioDao.selectAll(); //TODO select in query
-        for (Proprietario p : proprietari) {
-            if (Objects.equals(p.getEmail(), email) && Objects.equals(p.getPassword(), password)) {
-                return true;
-            }
-        }
-        return false;
+        return proprietarioDao.select(email, password) != null;
+    }
+
+    public Proprietario getProprietario(String email, String password) {
+        ProprietarioDAO proprietarioDao = new ProprietarioDAO();
+        return proprietarioDao.select(email, password);
     }
 
     public boolean isAccountCliente(String email, String password) {
-        try {
-            ClienteDAO clienteDAO = new ClienteDAO();
-            List<Cliente> clienti = clienteDAO.selectAll();
-            for (Cliente c : clienti) {
-                if (Objects.equals(c.getEmail(), email) && Objects.equals(c.getPassword(), password)) {
-                    return true;
-                }
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido");
-        }
-        return false;
+        ClienteDAO clienteDAO = new ClienteDAO();
+        return clienteDAO.select(email, password) != null;
     }
 
-    public boolean emailDisponibile(String email) { //TODO mettere per cliente fatto da controllare
+    public Cliente getCliente(String email, String password) {
         ClienteDAO clienteDAO = new ClienteDAO();
-        List<Cliente> clienti = clienteDAO.selectAll();
-        for (Cliente c : clienti) {
-            if (Objects.equals(c.getEmail(), email)) {
-                return false;
-            }
-        }
-        return true;
+        return clienteDAO.select(email, password);
     }
 
-    public boolean aggiungiCliente(Cliente cliente) {
+    public boolean emailDisponibile(String email) {
         ClienteDAO clienteDAO = new ClienteDAO();
-        boolean esito = clienteDAO.insert(cliente);
+        return clienteDAO.select(email) == null;
+    }
+
+    public void aggiungiCliente(Cliente cliente) {
+        ClienteDAO clienteDAO = new ClienteDAO();
+        clienteDAO.insert(cliente);
         aggiorna();
-        return esito;
     }
 
-    public void aggiorna() { //TODO controllare che cazz deve fare
+    public void aggiorna() { //TODO controllare che deve fare
         try {
             AutoDAO autoDAO = new AutoDAO();
-            ClienteDAO clienteDAO = new ClienteDAO();
-            ContrattoDAO contrattoDAO = new ContrattoDAO();
-
             List<Auto> auto = getAllAuto();
             List<Contratto> contratti = getAllContratti();
-            List<Cliente> inquilini = getAllClienti();
+            List<Cliente> clienti = getAllClienti();
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate adesso = LocalDate.now();
 
-            // aggiorna il campo affittato degli auto
-            for (Auto i : auto) {
+            for (Auto i : auto) {   // aggiorna il campo affittato degli auto
                 boolean affittato = false;
                 for (Contratto c : contratti) {
                     if (i.getID() == c.getIdAuto() && !adesso.isAfter(LocalDate.parse(c.getDataFine(), formatter))) {
                         affittato = true;
+                        break;
                     }
                 }
                 i.setNoleggiata(affittato);
                 autoDAO.update(i.getID(), i);
             }
-
-
             tabellaContratti.aggiornaTabella(contratti);
             tabellaAuto.aggiornaTabella(auto);
-            tabellaClienti.aggiornaTabella(inquilini);
+            tabellaClienti.aggiornaTabella(clienti);
 
         } catch (DateTimeParseException | NumberFormatException e) {
             System.out.println(e);

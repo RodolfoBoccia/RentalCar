@@ -47,5 +47,4 @@ public class ContrattoBuilder {
     public Contratto build() {
         return new Contratto(this);
     }
-
 }

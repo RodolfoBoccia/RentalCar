@@ -3,7 +3,6 @@ package controller;
 import dao.AutoDAO;
 import dao.ClienteDAO;
 import dao.ContrattoDAO;
-import dao.ProprietarioDAO;
 import model.Auto;
 import model.Cliente;
 import model.Contratto;
@@ -16,74 +15,40 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.Objects;
 
 public class ProprietarioController {
-    private TabellaClienti tabellaClienti = new TabellaClienti();
-    private TabellaAuto tabellaAuto = new TabellaAuto();
-    private TabellaContratti tabellaContratti = new TabellaContratti();
+    private final TabellaClienti tabellaClienti = new TabellaClienti();
+    private final TabellaAuto tabellaAuto = new TabellaAuto();
+    private final TabellaContratti tabellaContratti = new TabellaContratti();
     private Proprietario proprietario = null;
-    private boolean loggatoProprietario = false;
 
-    public boolean isProprietario(String id) {
-        return false;
+    public void setProprietario(Proprietario proprietario) {
+        this.proprietario = proprietario;
     }
 
-    public void setProprietario(int id) {
-        ProprietarioDAO proprietarioDao = new ProprietarioDAO();
-        proprietario = proprietarioDao.select(id);
+    public boolean isNoleggiata(int idAuto) {
+        AutoDAO autoDAO = new AutoDAO();
+        return autoDAO.select(idAuto).isNoleggiata();
     }
 
-    public boolean isLoggatoProprietario() {
-        return loggatoProprietario;
+    public boolean isCliente(int idCliente) {
+        ClienteDAO clienteDAO = new ClienteDAO();
+        return clienteDAO.select(idCliente) != null;
     }
 
-    public void setLoggatoProprietario() {
-        this.loggatoProprietario = true;
+    public Auto getAuto(int idAuto) {
+        AutoDAO autoDAO = new AutoDAO();
+        return autoDAO.select(idAuto);
     }
 
-    public Proprietario getProprietario() {
-        return proprietario;
+    public boolean isContratto(int idContratto) {
+        ContrattoDAO contrattoDao = new ContrattoDAO();
+        return contrattoDao.select(idContratto) != null;
     }
 
-    public boolean isNoleggiata(String idAuto) { //TODO
-        try {
-            AutoDAO autoDAO = new AutoDAO();
-            return autoDAO.select(Integer.parseInt(idAuto)).isNoleggiata();
-        } catch (NumberFormatException e) {
-            System.out.println("L'ID auto non è valido");
-        }
-        return false;
-    }
-
-    public boolean isCliente(String idCLiente) {
-        try {
-            ClienteDAO clienteDAO = new ClienteDAO();
-            return clienteDAO.select(Integer.parseInt(idCLiente)) != null;
-        } catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido");
-        }
-        return false;
-    }
-
-    public boolean isContratto(String idContratto) {
-        try {
-            ContrattoDAO contrattoDao = new ContrattoDAO();
-            return contrattoDao.select(Integer.parseInt(idContratto)) != null;
-        } catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido");
-        }
-        return false;
-    }
-
-    public float getPrezzoGiornaliero(String idAuto) {
-        try {
-            AutoDAO autoDAO = new AutoDAO();
-            return autoDAO.select(Integer.parseInt(idAuto)).getPrezzoGiornaliero();
-        } catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido");
-        }
-        return 0;
+    public float getPrezzoGiornaliero(int idAuto) {
+        AutoDAO autoDAO = new AutoDAO();
+        return autoDAO.select(idAuto).getPrezzoGiornaliero();
     }
 
     public List<Auto> getAllAuto() {
@@ -101,143 +66,95 @@ public class ProprietarioController {
         return contrattoDAO.selectAll();
     }
 
-    public boolean isAuto(String idAuto) {
-        try {
-            AutoDAO autoDAO = new AutoDAO();
-            return autoDAO.select(Integer.parseInt(idAuto)) != null;
-        } catch (NumberFormatException e) {
-            System.out.println();
-        }
-        return false;
-    }
-
-    public boolean modificaAuto(String idAuto, Auto auto) {
+    public boolean isAuto(int idAuto) {
         AutoDAO autoDAO = new AutoDAO();
-        boolean esito = autoDAO.update(Integer.parseInt(idAuto), auto);
-        aggiorna();
-        return esito;
+        return autoDAO.select(idAuto) != null;
     }
 
-    public boolean aggiungiAuto(Auto auto) {
+    public void modificaAuto(int idAuto, Auto auto) {
         AutoDAO autoDAO = new AutoDAO();
-        auto.setIdProprietario(proprietario.getID());
-        boolean esito = autoDAO.insert(auto);
-        List<Auto> autos = autoDAO.selectAll();
-        for(Auto i: autos) {
-            if(Objects.equals(i.getTarga(), auto.getTarga()) && Objects.equals(i.getMarca(), auto.getMarca()) &&
-                    Objects.equals(i.getModello(), auto.getModello())) {
-                auto.setID(i.getID());
-            }
-        }
+        autoDAO.update(idAuto, auto);
         aggiorna();
-        return esito;
     }
 
-    public boolean rimuoviAuto(String idAuto) {
-        boolean esito = false;
-        try {
-            AutoDAO autoDAO = new AutoDAO();
-            esito = autoDAO.delete(Integer.parseInt(idAuto));
-            aggiorna();
-        } catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido");
-        }
-        return esito;
+    public void aggiungiAuto(Auto auto) {
+        AutoDAO autoDAO = new AutoDAO();
+        auto.setIdProprietario(proprietario.getId());
+        autoDAO.insert(auto);
+        aggiorna();
     }
 
-    public boolean modificaCliente(String idCliente, Cliente cliente) {
+    public void rimuoviAuto(int idAuto) {
+        AutoDAO autoDAO = new AutoDAO();
+        autoDAO.delete(idAuto);
+        aggiorna();
+    }
+
+    public void modificaCliente(int idCliente, Cliente cliente) {
         ClienteDAO clienteDAO = new ClienteDAO();
-        boolean esito = clienteDAO.update(Integer.parseInt(idCliente), cliente);
+        clienteDAO.update(idCliente, cliente);
         aggiorna();
-        return esito;
     }
 
-    public Cliente getCliente(String idCliente) {
-        try {
-            ClienteDAO clienteDAO = new ClienteDAO();
-            return clienteDAO.select(Integer.parseInt(idCliente));
-        } catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido");
-        }
-        return null;
-    }
-
-    public boolean aggiungiCliente(Cliente cliente) {
+    public Cliente getCliente(int idCliente) {
         ClienteDAO clienteDAO = new ClienteDAO();
-        boolean esito = clienteDAO.insert(cliente);
+        return clienteDAO.select(idCliente);
+    }
+
+    public Cliente getUltimoCliente() {
+        ClienteDAO clienteDAO = new ClienteDAO();
+        return clienteDAO.selectLast();
+    }
+
+    public void aggiungiCliente(Cliente cliente) {
+        ClienteDAO clienteDAO = new ClienteDAO();
+        clienteDAO.insert(cliente);
         aggiorna();
-        return esito;
     }
 
-    public boolean rimuoviCliente(String idCliente) {
-        boolean esito = false;
-        try {
-            ClienteDAO clienteDAO = new ClienteDAO();
-            esito = clienteDAO.delete(Integer.parseInt(idCliente));
-            aggiorna();
-        } catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido");
-        }
-        return esito;
+    public void rimuoviCliente(int idCliente) {
+        ClienteDAO clienteDAO = new ClienteDAO();
+        clienteDAO.delete(idCliente);
+        aggiorna();
     }
 
-    public boolean aggiungiContratto(Contratto contratto) {
+    public void aggiungiContratto(Contratto contratto) {
         ContrattoDAO contrattoDao = new ContrattoDAO();
         contratto.setCfProprietario(proprietario.getCf());
-        try {
-            LocalDate oggi = LocalDate.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        }catch (DateTimeParseException | NumberFormatException e) {
-            System.out.println("ATTENZIONE! sono stati inseriti valori non validi per le date");
-            System.out.println("Per poter utilizzare tutte le funzionalità del programma " +
-                    "è necessario modificarle dal menu gestione contratti");
-        }
-        boolean esito = contrattoDao.insert(contratto);
+        contrattoDao.insert(contratto);
         aggiorna();
-        return esito;
     }
 
-    public boolean rimuoviContratto(String idContratto) {
-        boolean esito = false;
-        try {
-            ContrattoDAO contrattoDao = new ContrattoDAO();
-            esito = contrattoDao.delete(Integer.parseInt(idContratto));
-            aggiorna();
-        } catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido");
-        }
-        return esito;
+    public void rimuoviContratto(int idContratto) {
+        ContrattoDAO contrattoDao = new ContrattoDAO();
+        contrattoDao.delete(idContratto);
+        aggiorna();
     }
 
-    public void aggiorna() { //TODO controllare che cazz deve fare
+    public void aggiorna() { //TODO controllare che deve fare
         try {
             AutoDAO autoDAO = new AutoDAO();
-            ClienteDAO clienteDAO = new ClienteDAO();
-            ContrattoDAO contrattoDAO = new ContrattoDAO();
-
             List<Auto> auto = getAllAuto();
             List<Contratto> contratti = getAllContratti();
-            List<Cliente> inquilini = getAllClienti();
+            List<Cliente> clienti = getAllClienti();
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate adesso = LocalDate.now();
 
-            // aggiorna il campo affittato degli auto
-            for (Auto i : auto) {
+            for (Auto i : auto) {   // aggiorna il campo affittato degli auto
                 boolean affittato = false;
                 for (Contratto c : contratti) {
                     if (i.getID() == c.getIdAuto() && !adesso.isAfter(LocalDate.parse(c.getDataFine(), formatter))) {
                         affittato = true;
+                        break;
                     }
                 }
                 i.setNoleggiata(affittato);
                 autoDAO.update(i.getID(), i);
             }
-
-
             tabellaContratti.aggiornaTabella(contratti);
             tabellaAuto.aggiornaTabella(auto);
-            tabellaClienti.aggiornaTabella(inquilini);
+            tabellaClienti.aggiornaTabella(clienti);
 
         } catch (DateTimeParseException | NumberFormatException e) {
             System.out.println(e);

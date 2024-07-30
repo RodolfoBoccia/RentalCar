@@ -2,16 +2,14 @@ package view.menu;
 
 import controller.ProprietarioController;
 
-
 public class MenuFacadeProprietario extends Menu {
 
-    public MenuFacadeProprietario() {
-        super(new ProprietarioController());
+    public MenuFacadeProprietario(ProprietarioController proprietarioController) {
+        super(proprietarioController);
     }
 
     public void display() {
-        System.out.println("Menu proprietario");
-
+        System.out.println("---Menu proprietario---");
         System.out.println("Bentornato nell'app di noleggio auto!");
 
         while(true){
@@ -22,7 +20,6 @@ public class MenuFacadeProprietario extends Menu {
             System.out.println(" x - Logout");
 
             String input = scanner.next();
-
             switch (input) {
                 case "1":
                     MenuClienti menuClienti = new MenuClienti(proprietarioController);
@@ -44,5 +41,4 @@ public class MenuFacadeProprietario extends Menu {
             }
         }
     }
-
 }

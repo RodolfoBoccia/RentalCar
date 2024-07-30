@@ -6,6 +6,7 @@ public class ProprietarioBuilder {
     protected String cf;
     protected String email;
     protected String password;
+    protected int id;
 
     public ProprietarioBuilder nome(String nome) {
         this.nome = nome;
@@ -32,8 +33,12 @@ public class ProprietarioBuilder {
         return this;
     }
 
-    public Proprietario build(){
+    public ProprietarioBuilder id(int id) {
+        this.id = id;
+        return this;
+    }
+
+    public Proprietario build() {
         return new Proprietario(this);
     }
 }
-

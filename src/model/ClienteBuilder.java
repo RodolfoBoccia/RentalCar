@@ -1,6 +1,6 @@
 package model;
 
-public class  ClienteBuilder {
+public class ClienteBuilder {
     protected int id;
     protected String nome;
     protected String cognome;
@@ -38,7 +38,7 @@ public class  ClienteBuilder {
         return this;
     }
 
-    public Cliente build(){
+    public Cliente build() {
         return new Cliente(this);
     }
 }

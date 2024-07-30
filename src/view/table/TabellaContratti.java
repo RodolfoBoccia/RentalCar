@@ -1,9 +1,7 @@
 package view.table;
 
-
 import model.Contratto;
 import java.util.List;
-
 
 public class TabellaContratti extends TabellaGUI<Contratto> {
     private Object[] nomiColonne = {"ID",

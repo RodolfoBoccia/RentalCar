@@ -1,14 +1,13 @@
 package view.table;
 
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 
 public abstract class TabellaGUI<T> extends JFrame {
-    protected JTable tabella;
-    protected DefaultTableModel modelloTabella;
+    protected final JTable tabella;
+    protected final DefaultTableModel modelloTabella;
 
     public TabellaGUI(String nomeTabella) {
         super(nomeTabella);
@@ -39,5 +38,4 @@ public abstract class TabellaGUI<T> extends JFrame {
         aggiornaTabella(lista);
         setVisible(true);
     }
-
 }

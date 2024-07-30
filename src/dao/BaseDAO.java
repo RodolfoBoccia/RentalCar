@@ -1,7 +1,6 @@
 package dao;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 public abstract class BaseDAO<T> {
@@ -20,17 +19,15 @@ public abstract class BaseDAO<T> {
         return connection;
     }
 
-
     protected abstract void createTabella();
 
-    public abstract boolean insert(T entità);
+    public abstract boolean insert(T elemento);
 
     public abstract T select(int id);
 
     public abstract List<T> selectAll();
 
-    public abstract boolean update(int id, T entità);
+    public abstract void update(int id, T elemento);
 
-    public abstract boolean delete(int id);
-
+    public abstract void delete(int id);
 }

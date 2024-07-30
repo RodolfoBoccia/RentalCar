@@ -1,6 +1,5 @@
 package controller;
 
-
 import dao.AutoDAO;
 import dao.ClienteDAO;
 import dao.ContrattoDAO;
@@ -12,58 +11,41 @@ import view.table.TabellaClienti;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Collections;
 import java.util.List;
 
 
 public class ClienteController {
-    private TabellaClienti tabellaClienti = new TabellaClienti();
-    private TabellaAuto tabellaAuto = new TabellaAuto();
-    private TabellaContratti tabellaContratti = new TabellaContratti();
+    private final TabellaClienti tabellaClienti = new TabellaClienti();
+    private final TabellaAuto tabellaAuto = new TabellaAuto();
+    private final TabellaContratti tabellaContratti = new TabellaContratti();
     private Cliente cliente = null;
 
-    public boolean isAuto(String idAuto) {
-        try {
-            AutoDAO autoDAO = new AutoDAO();
-            return autoDAO.select(Integer.parseInt(idAuto)) != null;
-        } catch (NumberFormatException e) {
-            System.out.println();
-        }
-        return false;
+    public boolean isAuto(int idAuto) {
+        AutoDAO autoDAO = new AutoDAO();
+        return autoDAO.select(idAuto) != null;
     }
 
-    public boolean isNoleggiata(String idAuto) { //TODO
-        try {
-            AutoDAO autoDAO = new AutoDAO();
-            return autoDAO.select(Integer.parseInt(idAuto)).isNoleggiata();
-        } catch (NumberFormatException e) {
-            System.out.println("L'ID auto non è valido");
-        }
-        return false;
+    public boolean isNoleggiata(int idAuto) {
+        AutoDAO autoDAO = new AutoDAO();
+        return autoDAO.select(idAuto).isNoleggiata();
     }
 
-    public float getPrezzoGiornaliero(String idAuto) {
-        try {
-            AutoDAO autoDAO = new AutoDAO();
-            return autoDAO.select(Integer.parseInt(idAuto)).getPrezzoGiornaliero();
-        } catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido");
-        }
-        return 0;
+    public float getPrezzoGiornaliero(int idAuto) {
+        AutoDAO autoDAO = new AutoDAO();
+        return autoDAO.select(idAuto).getPrezzoGiornaliero();
     }
 
     public Cliente getCliente() {
-        try {
-            ClienteDAO clienteDAO = new ClienteDAO();
-            return clienteDAO.select(cliente.getID());
-        } catch (NumberFormatException e) {
-            System.out.println("L'ID inserito non è un valore valido");
-        }
-        return null;
+        return cliente;
     }
 
-    public void setCliente(int id) {
-        ClienteDAO clienteDAO = new ClienteDAO();
-        cliente = clienteDAO.select(id);
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public List<Cliente> getListCliente() {
+        return Collections.singletonList(cliente);
     }
 
     public List<Auto> getAllAuto() {
@@ -71,76 +53,60 @@ public class ClienteController {
         return autoDAO.selectAll();
     }
 
-    public List<Cliente> getAllClienti() {
-        ClienteDAO clienteDao = new ClienteDAO();
-        return clienteDao.selectAll();
-    }
-
     public List<Contratto> getAllContratti() {
         ContrattoDAO contrattoDAO = new ContrattoDAO();
         return contrattoDAO.selectAll();
     }
 
-    public boolean aggiungiContratto(Contratto contratto) {
+    public List<Contratto> getContrattiCliente() {
+        ContrattoDAO contrattoDAO = new ContrattoDAO();
+        return contrattoDAO.selectAll(cliente.getCf());
+    }
+
+    public void aggiungiContratto(Contratto contratto) {
         ContrattoDAO contrattoDao = new ContrattoDAO();
         contratto.setCfProprietario(cliente.getCf());
-        try {
-            LocalDate oggi = LocalDate.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        } catch (DateTimeParseException | NumberFormatException e) {
-            System.out.println("ATTENZIONE! sono stati inseriti valori non validi per le date");
-            System.out.println("Per poter utilizzare tutte le funzionalità del programma " +
-                    "è necessario modificarle dal menu gestione contratti");
-        }
-        boolean esito = contrattoDao.insert(contratto);
+        contrattoDao.insert(contratto);
         aggiorna();
-        return esito;
     }
 
-    public boolean modificaCliente(Cliente nuocoCliente) {
+    public void modificaCliente(Cliente clienteModificato) {
         ClienteDAO clienteDAO = new ClienteDAO();
-        boolean esito = clienteDAO.update(0, nuocoCliente);
-        cliente = nuocoCliente;
+        clienteDAO.update(cliente.getId(), clienteModificato);
+        cliente = clienteModificato;
         aggiorna();
-        return esito;
     }
 
-    public boolean rimuoviUtente() {
+    public void rimuoviUtente() {
         ClienteDAO clienteDAO = new ClienteDAO();
-        boolean esito = clienteDAO.delete(0);
+        clienteDAO.delete(cliente.getId());
         aggiorna();
-        return esito;
     }
 
-    public void aggiorna() { //TODO controllare che cazz deve fare
+    public void aggiorna() { //TODO controllare che deve fare
         try {
             AutoDAO autoDAO = new AutoDAO();
-            ClienteDAO clienteDAO = new ClienteDAO();
-            ContrattoDAO contrattoDAO = new ContrattoDAO();
-
             List<Auto> auto = getAllAuto();
             List<Contratto> contratti = getAllContratti();
-            List<Cliente> inquilini = getAllClienti();
+            List<Cliente> clienti = Collections.singletonList(cliente);
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate adesso = LocalDate.now();
 
-            // aggiorna il campo affittato degli auto
-            for (Auto i : auto) {
+            for (Auto i : auto) {   // aggiorna il campo affittato degli auto
                 boolean affittato = false;
                 for (Contratto c : contratti) {
                     if (i.getID() == c.getIdAuto() && !adesso.isAfter(LocalDate.parse(c.getDataFine(), formatter))) {
                         affittato = true;
+                        break;
                     }
                 }
                 i.setNoleggiata(affittato);
                 autoDAO.update(i.getID(), i);
             }
-
-
             tabellaContratti.aggiornaTabella(contratti);
             tabellaAuto.aggiornaTabella(auto);
-            tabellaClienti.aggiornaTabella(inquilini);
+            tabellaClienti.aggiornaTabella(clienti);
 
         } catch (DateTimeParseException | NumberFormatException e) {
             System.out.println(e);
@@ -156,9 +122,14 @@ public class ClienteController {
         tabellaAuto.mostraTabella(getAllAuto());
     }
 
-    public void mostraContrattiUtente() {
+    public void mostraContrattiCliente() {
         aggiorna();
-        tabellaContratti.mostraTabella(getAllContratti()); //TODO controllare solo per utente loggato
+        tabellaContratti.mostraTabella(getContrattiCliente());
+    }
+
+    public void mostraCliente() {
+        aggiorna();
+        tabellaClienti.mostraTabella(getListCliente());
     }
 
     public void reset() {
@@ -167,5 +138,4 @@ public class ClienteController {
         tabellaAuto.dispose();
         cliente = null;
     }
-
 }

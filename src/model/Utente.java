@@ -6,14 +6,15 @@ public abstract class Utente {
     private String cf;
     private String nome;
     private String cognome;
+    private int id;
 
-    public Utente(String cf, String nome, String cognome, String email, String password)
-    {
+    public Utente(String cf, String nome, String cognome, String email, String password, int id) {
         this.nome = nome;
         this.cognome = cognome;
         this.cf = cf;
         this.email = email;
         this.password = password;
+        this.id = id;
     }
 
     public String getNome() {
@@ -55,6 +56,8 @@ public abstract class Utente {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
+    public int getId() {
+        return id;
+    }
 }
-
-

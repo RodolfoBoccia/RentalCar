@@ -1,6 +1,5 @@
 package view.table;
 
-
 import model.Auto;
 import java.util.List;
 
@@ -14,6 +13,7 @@ public class TabellaAuto extends TabellaGUI<Auto> {
             "marca",
             "modello",
             "noleggiata",
+            "ultima_revisione",
             "prezzo_giornaliero"};
 
     public TabellaAuto() {
@@ -27,9 +27,8 @@ public class TabellaAuto extends TabellaGUI<Auto> {
 
         for(Auto i: lista) {
             Object[] riga = {i.getID(), i.getTarga(), i.getNumeroPosti(), i.getCategoria(), i.getAlimentazione(),
-                    i.getCambio(), i.getMarca(), i.getModello(), i.isNoleggiata()?"sì":"no", i.getPrezzoGiornaliero()};
+                    i.getCambio(), i.getMarca(), i.getModello(), i.isNoleggiata()?"sì":"no", i.getUltimaRevisione(), i.getPrezzoGiornaliero()};
             modelloTabella.addRow(riga);
         }
     }
-
 }

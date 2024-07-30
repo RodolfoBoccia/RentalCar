@@ -1,7 +1,7 @@
 package dao;
 
-import model.Cliente;
 import model.Contratto;
+import model.ContrattoBuilder;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,16 +22,16 @@ public class ContrattoDAO extends BaseDAO<Contratto> {
         String sql = "INSERT INTO contratto (id, idAuto, cfCliente, cfProprietario, dataInizio, dataFine, totale) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, contratto.getID());
-            pstmt.setInt(2, contratto.getIdAuto());
-            pstmt.setString(3, contratto.getCfCliente());
-            pstmt.setString(4, contratto.getCfProprietario());
-            pstmt.setString(5, contratto.getDataInizio());
-            pstmt.setString(6, contratto.getDataFine());
-            pstmt.setFloat(7, contratto.getTotale());
+             PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setInt(1, contratto.getID());
+            statement.setInt(2, contratto.getIdAuto());
+            statement.setString(3, contratto.getCfCliente());
+            statement.setString(4, contratto.getCfProprietario());
+            statement.setString(5, contratto.getDataInizio());
+            statement.setString(6, contratto.getDataFine());
+            statement.setFloat(7, contratto.getTotale());
 
-            int affectedRows = pstmt.executeUpdate();
+            int affectedRows = statement.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -43,10 +43,10 @@ public class ContrattoDAO extends BaseDAO<Contratto> {
         String sql = "SELECT id, idAuto, cfCliente, cfProprietario, dataInizio, dataFine, totale FROM contratto WHERE id = ?";
 
         try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
+             PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setInt(1, id);
 
-            try (ResultSet rs = pstmt.executeQuery()) {
+            try (ResultSet rs = statement.executeQuery()) {
                 if (rs.next()) {
                     int idAuto = rs.getInt("idAuto");
                     String cfCliente = rs.getString("cfCliente");
@@ -55,7 +55,15 @@ public class ContrattoDAO extends BaseDAO<Contratto> {
                     String dataFine = rs.getString("dataFine");
                     float totale = rs.getFloat("totale");
 
-                    return new Contratto(idAuto, cfCliente, cfProprietario, dataInizio, dataFine, totale, id);
+                    ContrattoBuilder builder = new ContrattoBuilder();
+                    builder.idAuto(idAuto)
+                            .cfCliente(cfCliente)
+                            .cfProprietario(cfProprietario)
+                            .dataInizio(dataInizio)
+                            .dataFine(dataFine)
+                            .totale(totale)
+                            .id(id);
+                    return builder.build();
                 }
             }
         } catch (SQLException e) {
@@ -70,8 +78,8 @@ public class ContrattoDAO extends BaseDAO<Contratto> {
         List<Contratto> contrattoList = new ArrayList<>();
 
         try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
+             PreparedStatement statement = conn.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery()) {
 
             while (rs.next()) {
                 int id = rs.getInt("id");
@@ -82,8 +90,15 @@ public class ContrattoDAO extends BaseDAO<Contratto> {
                 String dataFine = rs.getString("dataFine");
                 float totale = rs.getFloat("totale");
 
-                Contratto contratto = new Contratto(idAuto, cfCliente, cfProprietario, dataInizio, dataFine, totale, id);
-                contrattoList.add(contratto);
+                ContrattoBuilder builder = new ContrattoBuilder();
+                builder.idAuto(idAuto)
+                        .cfCliente(cfCliente)
+                        .cfProprietario(cfProprietario)
+                        .dataInizio(dataInizio)
+                        .dataFine(dataFine)
+                        .totale(totale)
+                        .id(id);
+                contrattoList.add(builder.build());
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -92,39 +107,65 @@ public class ContrattoDAO extends BaseDAO<Contratto> {
         return contrattoList;
     }
 
-    public boolean update(int id, Contratto entità) {
+    public List<Contratto> selectAll(String cfCliente) {
+        String sql = "SELECT id, idAuto, cfCliente, cfProprietario, dataInizio, dataFine, totale FROM contratto WHERE cfCliente = ?";
+        List<Contratto> contrattoList = new ArrayList<>();
+
+        try (Connection conn = getConnection();
+             PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setString(1, cfCliente);
+
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    int idAuto = rs.getInt("idAuto");
+                    String cfProprietario = rs.getString("cfProprietario");
+                    String dataInizio = rs.getString("dataInizio");
+                    String dataFine = rs.getString("dataFine");
+                    float totale = rs.getFloat("totale");
+
+                    ContrattoBuilder builder = new ContrattoBuilder();
+                    builder.idAuto(idAuto).cfCliente(cfCliente).cfProprietario(cfProprietario)
+                            .dataInizio(dataInizio).dataFine(dataFine).totale(totale).id(id);
+
+                    contrattoList.add(builder.build());
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return contrattoList;
+    }
+
+    public void update(int id, Contratto nuovoContratto) {
         String sql = "UPDATE contratto SET idAuto = ?, cfCliente = ?, cfProprietario = ?, dataInizio = ?, dataFine = ?, totale= ? WHERE id = ?";
 
         try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, entità.getIdAuto());
-            pstmt.setString(2, entità.getCfCliente());
-            pstmt.setString(3, entità.getCfProprietario());
-            pstmt.setString(4, entità.getDataInizio());
-            pstmt.setString(5, entità.getDataFine());
-            pstmt.setFloat(6, entità.getTotale());
-            pstmt.setInt(7, id);
+             PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setInt(1, nuovoContratto.getIdAuto());
+            statement.setString(2, nuovoContratto.getCfCliente());
+            statement.setString(3, nuovoContratto.getCfProprietario());
+            statement.setString(4, nuovoContratto.getDataInizio());
+            statement.setString(5, nuovoContratto.getDataFine());
+            statement.setFloat(6, nuovoContratto.getTotale());
+            statement.setInt(7, id);
 
-            int affectedRows = pstmt.executeUpdate();
-            return affectedRows > 0;
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
-    public boolean delete(int id) {
+    public void delete(int id) {
         String sql = "DELETE FROM contratto WHERE id = ?";
 
         try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
+             PreparedStatement statement = conn.prepareStatement(sql)) {
+            statement.setInt(1, id);
 
-            int affectedRows = pstmt.executeUpdate();
-            return affectedRows > 0;
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
     }
 }

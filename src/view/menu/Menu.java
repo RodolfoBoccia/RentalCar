@@ -4,6 +4,7 @@ import controller.ClienteController;
 import controller.LoginController;
 import controller.ProprietarioController;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public abstract class Menu {
@@ -12,23 +13,35 @@ public abstract class Menu {
     protected static ClienteController clienteController;
     protected static LoginController loginController;
 
-    Menu() {
-    }
-
     public Menu(LoginController loginController) {
-        this.loginController = loginController;
+        Menu.loginController = loginController;
         this.scanner = new Scanner(System.in);
     }
 
     public Menu(ProprietarioController proprietarioController) {
-        this.proprietarioController = proprietarioController;
+        Menu.proprietarioController = proprietarioController;
         this.scanner = new Scanner(System.in);
     }
 
     public Menu(ClienteController clienteController) {
-        this.clienteController = clienteController;
+        Menu.clienteController = clienteController;
         this.scanner = new Scanner(System.in);
     }
 
     public abstract void display();
+
+    public int getIntInput() {
+        int input = 0;
+        boolean inputValido = false;
+        while (!inputValido) {
+            try {
+                input = scanner.nextInt();
+                inputValido = true;
+            } catch (InputMismatchException e) {
+                System.out.println("Inserire un numero intero");
+                scanner.next();
+            }
+        }
+        return input;
+    }
 }
