@@ -83,7 +83,7 @@ public class ProprietarioControllerTest {
         AutoDAO autoDAO = new AutoDAO();
         List<Auto> autos = autoDAO.selectAll();
         for (Auto auto : autos) {
-            if (auto.getTarga().equals("example")) {
+            if (auto.getTarga().equals("modificato")) {
                 autoDAO.delete(auto.getID());
             }
         }
@@ -143,11 +143,10 @@ public class ProprietarioControllerTest {
 
     @Test
     void testModifica() {
-        //test modifica immobile
+        //test modifica auto
         AutoDAO autoDAO = new AutoDAO();
         auto.setTarga("modificato");
 
-        assertTrue(proprietarioController.aggiungiAuto(this.auto));
         assertTrue(proprietarioController.modificaAuto(this.auto.getID(), auto));
         this.auto = autoDAO.select(this.auto.getID());
         assertEquals(this.auto.getTarga(), "modificato");
@@ -156,7 +155,6 @@ public class ProprietarioControllerTest {
     // Qui si verifica se eliminando il cliente si elimina anche il contratto
     @Test
     void testRimuoviCliente() {
-        assertTrue(this.proprietarioController.aggiungiAuto(this.auto));
         assertTrue(this.proprietarioController.aggiungiCliente(this.cliente));
 
         ContrattoBuilder contrattoBuilder = new ContrattoBuilder();
@@ -170,8 +168,8 @@ public class ProprietarioControllerTest {
 
         // seleziono gli id di cliente e contratto appena inseriti e verifico che rimuovendo cliente venga
         // rimosso anche contratto
-        List<Cliente> inquilini = this.proprietarioController.getAllClienti();
-        for (Cliente i : inquilini) {
+        List<Cliente> clienti = this.proprietarioController.getAllClienti();
+        for (Cliente i : clienti) {
             if (i.getCf().equals("EXAMPLE")) {
                 this.cliente.setId(i.getId());
             }
@@ -190,7 +188,6 @@ public class ProprietarioControllerTest {
     // Qui si verifica se eliminando l'auto si elimina anche il contratto
     @Test
     void testRimuoviAuto() {
-        assertTrue(this.proprietarioController.aggiungiAuto(this.auto));
         assertTrue(this.proprietarioController.aggiungiCliente(this.cliente));
 
         ContrattoBuilder contrattoBuilder = new ContrattoBuilder();
