@@ -71,23 +71,26 @@ public class ProprietarioController {
         return autoDAO.select(idAuto) != null;
     }
 
-    public void modificaAuto(int idAuto, Auto auto) {
+    public boolean modificaAuto(int idAuto, Auto auto) {
         AutoDAO autoDAO = new AutoDAO();
         autoDAO.update(idAuto, auto);
         aggiorna();
+        return true;
     }
 
-    public void aggiungiAuto(Auto auto) {
+    public boolean aggiungiAuto(Auto auto) {
         AutoDAO autoDAO = new AutoDAO();
         auto.setIdProprietario(proprietario.getId());
         autoDAO.insert(auto);
         aggiorna();
+        return true;
     }
 
-    public void rimuoviAuto(int idAuto) {
+    public boolean rimuoviAuto(int idAuto) {
         AutoDAO autoDAO = new AutoDAO();
         autoDAO.delete(idAuto);
         aggiorna();
+        return true;
     }
 
     public void modificaCliente(int idCliente, Cliente cliente) {
@@ -106,29 +109,33 @@ public class ProprietarioController {
         return clienteDAO.selectLast();
     }
 
-    public void aggiungiCliente(Cliente cliente) {
+    public boolean aggiungiCliente(Cliente cliente) {
         ClienteDAO clienteDAO = new ClienteDAO();
         clienteDAO.insert(cliente);
         aggiorna();
+        return true;
     }
 
-    public void rimuoviCliente(int idCliente) {
+    public boolean rimuoviCliente(int idCliente) {
         ClienteDAO clienteDAO = new ClienteDAO();
         clienteDAO.delete(idCliente);
         aggiorna();
+        return true;
     }
 
-    public void aggiungiContratto(Contratto contratto) {
+    public boolean aggiungiContratto(Contratto contratto) {
         ContrattoDAO contrattoDao = new ContrattoDAO();
         contratto.setCfProprietario(proprietario.getCf());
         contrattoDao.insert(contratto);
         aggiorna();
+        return true;
     }
 
-    public void rimuoviContratto(int idContratto) {
+    public boolean rimuoviContratto(int idContratto) {
         ContrattoDAO contrattoDao = new ContrattoDAO();
         contrattoDao.delete(idContratto);
         aggiorna();
+        return true;
     }
 
     public void aggiorna() { //TODO controllare che deve fare

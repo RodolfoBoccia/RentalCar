@@ -96,4 +96,8 @@ public class Auto {
     public void setUltimaRevisione(String ultimaRevisione) {
         this.ultimaRevisione = ultimaRevisione;
     }
+
+    public void setID(int id) {
+        this.ID = id;
+    }
 }

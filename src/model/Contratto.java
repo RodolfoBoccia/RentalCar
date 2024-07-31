@@ -2,7 +2,7 @@ package model;
 
 
 public class Contratto {
-    private final int ID;
+    private int ID;
     private final int idAuto;
     private final String cfCliente;
     private String cfProprietario;
@@ -50,5 +50,9 @@ public class Contratto {
 
     public int getID() {
         return this.ID;
+    }
+
+    public void setID(int id) {
+        this.ID = id;
     }
 }
