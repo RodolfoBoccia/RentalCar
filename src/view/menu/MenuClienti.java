@@ -5,9 +5,10 @@ import model.Cliente;
 import model.ClienteBuilder;
 
 public class MenuClienti extends Menu {
+    private static ProprietarioController proprietarioController;
 
     public MenuClienti(ProprietarioController proprietarioController) {
-        super(proprietarioController);
+        MenuClienti.proprietarioController = proprietarioController;
     }
 
     public void display() {

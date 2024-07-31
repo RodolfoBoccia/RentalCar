@@ -9,9 +9,10 @@ import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 
 public class MenuContrattiProprietario extends Menu {
+        private static ProprietarioController proprietarioController;
 
     public MenuContrattiProprietario(ProprietarioController proprietarioController) {
-        super(proprietarioController);
+        MenuContrattiProprietario.proprietarioController = proprietarioController;
     }
 
     public void display() {

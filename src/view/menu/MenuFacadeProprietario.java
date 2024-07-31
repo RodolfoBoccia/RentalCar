@@ -1,18 +1,21 @@
 package view.menu;
 
 import controller.ProprietarioController;
+import model.Proprietario;
 
 public class MenuFacadeProprietario extends Menu {
+    private static ProprietarioController proprietarioController;
 
-    public MenuFacadeProprietario(ProprietarioController proprietarioController) {
-        super(proprietarioController);
+    public MenuFacadeProprietario(ProprietarioController proprietarioController, Proprietario proprietario) {
+        MenuFacadeProprietario.proprietarioController = proprietarioController;
+        proprietarioController.setProprietario(proprietario);
     }
 
     public void display() {
         System.out.println("---Menu proprietario---");
         System.out.println("Bentornato nell'app di noleggio auto!");
 
-        while(true){
+        while (true) {
             System.out.println("Scegliere quale menu visualizzare: ");
             System.out.println(" 1 - Menu gestione clienti");
             System.out.println(" 2 - Menu gestione auto");

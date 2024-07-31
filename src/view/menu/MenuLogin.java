@@ -6,9 +6,10 @@ import controller.ProprietarioController;
 import model.ClienteBuilder;
 
 public class MenuLogin extends Menu {
+    protected static LoginController loginController;
 
-    public MenuLogin() {
-        super(new LoginController());
+    public MenuLogin(LoginController loginController) {
+        MenuLogin.loginController = loginController;
     }
 
     public void display() {
@@ -48,14 +49,12 @@ public class MenuLogin extends Menu {
             String password = scanner.next();
 
             if (loginController.isAccountProprietario(email, password)) {
-                MenuFacadeProprietario menuFacadeProprietario = new MenuFacadeProprietario(new ProprietarioController());
-                proprietarioController.setProprietario(loginController.getProprietario(email, password));
+                MenuFacadeProprietario menuFacadeProprietario = new MenuFacadeProprietario(new ProprietarioController(), loginController.getProprietario(email, password));
                 menuFacadeProprietario.display();
                 return;
 
             } else if (loginController.isAccountCliente(email, password)) {
-                MenuFacadeCliente menuFacadeCliente = new MenuFacadeCliente();
-                clienteController.setCliente(loginController.getCliente(email, password));
+                MenuFacadeCliente menuFacadeCliente = new MenuFacadeCliente(new ClienteController(), loginController.getCliente(email, password));
                 menuFacadeCliente.display();
                 return;
 

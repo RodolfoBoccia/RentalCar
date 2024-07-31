@@ -5,9 +5,10 @@ import model.Cliente;
 
 
 public class MenuUtente extends Menu {
+    protected static ClienteController clienteController;
 
     public MenuUtente(ClienteController clienteController) {
-        super(clienteController);
+        MenuUtente.clienteController = clienteController;
     }
 
     public void display() {

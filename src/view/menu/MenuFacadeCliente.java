@@ -1,10 +1,14 @@
 package view.menu;
 
 import controller.ClienteController;
+import model.Cliente;
 
 public class MenuFacadeCliente extends Menu {
-    public MenuFacadeCliente() {
-        super(new ClienteController());
+    protected static ClienteController clienteController;
+
+    public MenuFacadeCliente(ClienteController clienteController, Cliente cliente) {
+        MenuFacadeCliente.clienteController = clienteController;
+        clienteController.setCliente(cliente);
     }
 
     public void display() {

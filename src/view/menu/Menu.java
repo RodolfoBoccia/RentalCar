@@ -1,30 +1,12 @@
 package view.menu;
 
-import controller.ClienteController;
-import controller.LoginController;
-import controller.ProprietarioController;
-
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public abstract class Menu {
     protected Scanner scanner;
-    protected static ProprietarioController proprietarioController;
-    protected static ClienteController clienteController;
-    protected static LoginController loginController;
 
-    public Menu(LoginController loginController) {
-        Menu.loginController = loginController;
-        this.scanner = new Scanner(System.in);
-    }
-
-    public Menu(ProprietarioController proprietarioController) {
-        Menu.proprietarioController = proprietarioController;
-        this.scanner = new Scanner(System.in);
-    }
-
-    public Menu(ClienteController clienteController) {
-        Menu.clienteController = clienteController;
+    public Menu() {
         this.scanner = new Scanner(System.in);
     }
 

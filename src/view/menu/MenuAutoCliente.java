@@ -3,9 +3,10 @@ package view.menu;
 import controller.ClienteController;
 
 public class MenuAutoCliente extends Menu {
+    protected static ClienteController clienteController;
 
     public MenuAutoCliente(ClienteController clienteController) {
-        super(clienteController);
+        MenuAutoCliente.clienteController = clienteController;
     }
 
     public void display() {

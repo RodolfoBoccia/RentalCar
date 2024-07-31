@@ -10,9 +10,10 @@ import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 
 public class MenuContrattiCliente extends Menu {
+    protected static ClienteController clienteController;
 
     public MenuContrattiCliente(ClienteController clienteController) {
-        super(clienteController);
+        MenuContrattiCliente.clienteController = clienteController;
     }
 
     public void display() {
