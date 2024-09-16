@@ -114,7 +114,7 @@ public class AutoDAO extends BaseDAO<Auto> {
         return autoList;
     }
 
-    public void update(int id, Auto nuovaAuto) {
+    public boolean update(int id, Auto nuovaAuto) {
         String sql = "UPDATE auto SET targa = ?, numeroPosti = ?, categoria = ?, alimentazione = ?, prezzoGiornaliero = ?, noleggiata = ?, idProprietario = ?, marca = ?, modello = ?, cambio = ?, ultimaRevisione = ? WHERE ID = ?";
 
         try (Connection conn = getConnection();
@@ -132,21 +132,53 @@ public class AutoDAO extends BaseDAO<Auto> {
             statement.setString(11, nuovaAuto.getUltimaRevisione());
             statement.setInt(12, nuovaAuto.getID());
 
-            statement.executeUpdate();
+            int affectedRows = statement.executeUpdate();
+            return affectedRows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
-    public void delete(int id) {
-        String sql = "DELETE FROM auto WHERE id = ?";
+    public boolean delete(int id) {
+        String deleteAutoSql = "DELETE FROM auto WHERE id = ?";
+        String deleteContrattoSql = "DELETE FROM contratto WHERE idAuto = ?";
 
-        try (Connection conn = getConnection();
-             PreparedStatement statement = conn.prepareStatement(sql)) {
-            statement.setInt(1, id);
-            statement.executeUpdate();
+        try (Connection conn = getConnection()) {
+            // Inizia la transazione
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement deleteContrattoStatement = conn.prepareStatement(deleteContrattoSql);
+                 PreparedStatement deleteAutoStatement = conn.prepareStatement(deleteAutoSql)) {
+
+                // Elimina i contratti associati all'auto
+                deleteContrattoStatement.setInt(1, id);
+                deleteContrattoStatement.executeUpdate();
+
+                // Elimina l'auto
+                deleteAutoStatement.setInt(1, id);
+                deleteAutoStatement.executeUpdate();
+
+                // Se tutto va bene, conferma la transazione
+                conn.commit();
+
+                // Successo
+                return true;
+
+            } catch (SQLException e) {
+                // Se c'è un errore, annulla la transazione
+                conn.rollback();
+                e.printStackTrace();
+                return false;  // Errore durante la transazione
+            } finally {
+                // Ripristina l'autocommit
+                conn.setAutoCommit(true);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;  // Errore durante la connessione
         }
     }
+
+
 }

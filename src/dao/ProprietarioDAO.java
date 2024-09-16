@@ -117,7 +117,7 @@ public class ProprietarioDAO extends BaseDAO<Proprietario> {
         return proprietarioList;
     }
 
-    public void update(int id, Proprietario nuovoProprietario) {
+    public boolean update(int id, Proprietario nuovoProprietario) {
         String sql = "UPDATE proprietario SET email = ?, password = ? , nome = ?, cognome = ?,cf = ? WHERE id = ?";
 
         try (Connection conn = getConnection();
@@ -129,22 +129,26 @@ public class ProprietarioDAO extends BaseDAO<Proprietario> {
             statement.setString(5, nuovoProprietario.getCf());
             statement.setInt(6, id);
 
-            statement.executeUpdate();
+            int affectedRows = statement.executeUpdate();
+            return affectedRows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
-    public void delete(int id) {
+    public boolean delete(int id) {
         String sql = "DELETE FROM proprietario WHERE id = ?";
 
         try (Connection conn = getConnection();
              PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setInt(1, id);
 
-            statement.executeUpdate();
+            int affectedRows = statement.executeUpdate();
+            return affectedRows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 }

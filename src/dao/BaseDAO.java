@@ -27,7 +27,7 @@ public abstract class BaseDAO<T> {
 
     public abstract List<T> selectAll();
 
-    public abstract void update(int id, T elemento);
+    public abstract boolean update(int id, T elemento);
 
-    public abstract void delete(int id);
+    public abstract boolean delete(int id);
 }

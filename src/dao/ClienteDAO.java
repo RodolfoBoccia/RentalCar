@@ -170,7 +170,7 @@ public class ClienteDAO extends BaseDAO<Cliente> {
         return clienteList;
     }
 
-    public void update(int id, Cliente nuovoCliente) {
+    public boolean update(int id, Cliente nuovoCliente) {
         String sql = "UPDATE cliente SET email = ?, password = ? , nome = ?, cognome = ?, cf = ? WHERE id = ?";
 
         try (Connection conn = getConnection();
@@ -181,21 +181,26 @@ public class ClienteDAO extends BaseDAO<Cliente> {
             statement.setString(4, nuovoCliente.getCognome());
             statement.setString(5, nuovoCliente.getCf());
             statement.setInt(6, id);
-            statement.executeUpdate();
+
+            int affectedRows = statement.executeUpdate();
+            return affectedRows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
-    public void delete(int id) {
+    public boolean delete(int id) {
         String sql = "DELETE FROM cliente WHERE id = ?";
 
         try (Connection conn = getConnection();
              PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setInt(1, id);
-            statement.executeUpdate();
+            int affectedRows = statement.executeUpdate();
+            return affectedRows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 }

@@ -74,23 +74,25 @@ public class ProprietarioController {
     public boolean modificaAuto(int idAuto, Auto auto) {
         AutoDAO autoDAO = new AutoDAO();
         autoDAO.update(idAuto, auto);
+        boolean result = autoDAO.update(idAuto, auto);
         aggiorna();
-        return true;
+        return result;
     }
 
     public boolean aggiungiAuto(Auto auto) {
         AutoDAO autoDAO = new AutoDAO();
         auto.setIdProprietario(proprietario.getId());
-        autoDAO.insert(auto);
+        boolean result = autoDAO.insert(auto);
         aggiorna();
-        return true;
+        return result;
     }
 
     public boolean rimuoviAuto(int idAuto) {
         AutoDAO autoDAO = new AutoDAO();
         autoDAO.delete(idAuto);
+        boolean result = autoDAO.delete(idAuto);
         aggiorna();
-        return true;
+        return result;
     }
 
     public void modificaCliente(int idCliente, Cliente cliente) {
@@ -111,34 +113,34 @@ public class ProprietarioController {
 
     public boolean aggiungiCliente(Cliente cliente) {
         ClienteDAO clienteDAO = new ClienteDAO();
-        clienteDAO.insert(cliente);
+        boolean result = clienteDAO.insert(cliente);
         aggiorna();
-        return true;
+        return result;
     }
 
     public boolean rimuoviCliente(int idCliente) {
         ClienteDAO clienteDAO = new ClienteDAO();
-        clienteDAO.delete(idCliente);
+        boolean result = clienteDAO.delete(idCliente);
         aggiorna();
-        return true;
+        return result;
     }
 
     public boolean aggiungiContratto(Contratto contratto) {
         ContrattoDAO contrattoDao = new ContrattoDAO();
         contratto.setCfProprietario(proprietario.getCf());
-        contrattoDao.insert(contratto);
+        boolean result = contrattoDao.insert(contratto);;
         aggiorna();
-        return true;
+        return result;
     }
 
     public boolean rimuoviContratto(int idContratto) {
         ContrattoDAO contrattoDao = new ContrattoDAO();
-        contrattoDao.delete(idContratto);
+        boolean result = contrattoDao.delete(idContratto);
         aggiorna();
-        return true;
+        return result;
     }
 
-    public void aggiorna() { //TODO controllare che deve fare
+    public void aggiorna() {
         try {
             AutoDAO autoDAO = new AutoDAO();
             List<Auto> auto = getAllAuto();

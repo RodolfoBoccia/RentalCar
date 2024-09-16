@@ -137,7 +137,7 @@ public class ContrattoDAO extends BaseDAO<Contratto> {
         return contrattoList;
     }
 
-    public void update(int id, Contratto nuovoContratto) {
+    public boolean update(int id, Contratto nuovoContratto) {
         String sql = "UPDATE contratto SET idAuto = ?, cfCliente = ?, cfProprietario = ?, dataInizio = ?, dataFine = ?, totale= ? WHERE id = ?";
 
         try (Connection conn = getConnection();
@@ -150,22 +150,28 @@ public class ContrattoDAO extends BaseDAO<Contratto> {
             statement.setFloat(6, nuovoContratto.getTotale());
             statement.setInt(7, id);
 
-            statement.executeUpdate();
+            int affectedRows = statement.executeUpdate();
+            return affectedRows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
-    public void delete(int id) {
+    public boolean delete(int id) {
         String sql = "DELETE FROM contratto WHERE id = ?";
 
         try (Connection conn = getConnection();
              PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setInt(1, id);
 
-            statement.executeUpdate();
+            int affectedRows = statement.executeUpdate();
+            return affectedRows > 0;
+
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
+
     }
 }

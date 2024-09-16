@@ -83,7 +83,7 @@ public class ClienteController {
         aggiorna();
     }
 
-    public void aggiorna() { //TODO controllare che deve fare
+    public void aggiorna() {
         try {
             AutoDAO autoDAO = new AutoDAO();
             List<Auto> auto = getAllAuto();

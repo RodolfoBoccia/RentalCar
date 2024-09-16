@@ -226,6 +226,7 @@ public class ProprietarioControllerTest {
 
         ContrattoBuilder contrattoBuilder = new ContrattoBuilder();
         contrattoBuilder.dataFine("2025-01-01")
+                .id(999)
                 .dataInizio("2023-01-01")
                 .cfProprietario("EXAMPLE")
                 .idAuto(this.auto.getID())
