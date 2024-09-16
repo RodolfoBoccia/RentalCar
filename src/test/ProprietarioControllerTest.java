@@ -181,8 +181,7 @@ public class ProprietarioControllerTest {
             }
         }
         assertTrue(this.proprietarioController.rimuoviCliente(this.cliente.getId()));
-        // verifico che non ci sia già più il contratto //TODO vai jacopo tutto tuo
-        //assertFalse(this.proprietarioController.rimuoviContratto(contratto.getID()));
+        assertFalse(this.proprietarioController.rimuoviContratto(contratto.getID()));
     }
 
     // Qui si verifica se eliminando l'auto si elimina anche il contratto
@@ -215,7 +214,7 @@ public class ProprietarioControllerTest {
             }
         }
         assertTrue(this.proprietarioController.rimuoviAuto(this.auto.getID()));
-        //assertFalse(this.proprietarioController.rimuoviContratto(contratto.getID())); //TODO vai jacopo tutto tuo
+        assertFalse(this.proprietarioController.rimuoviContratto(contratto.getID()));
     }
 
     @Test
